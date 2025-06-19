@@ -64,7 +64,9 @@
             "customise",
             "dotenv",
             "exitstatus",
+            "poolclass",
             "sessionfinish",
+            "sessionmaker",
             "sessionstart",
             "startpath",
             "usefixtures"

@@ -2,16 +2,27 @@ from __future__ import annotations
 
 from pydantic import PostgresDsn
 import pytest
-from app.core.settings import Settings, KeycloakSettings, DatabaseSettings
+from app.core.settings import Settings, DatabaseSettings
 
 @pytest.mark.unit
-@pytest.mark.usefixtures("settings")
+@pytest.mark.usefixtures("settings", "sqlite_settings")
 class TestSettings:
     """Test the Settings class."""
 
     def test_settings_instance(self: TestSettings, settings: Settings) -> None:
         """Ensure the settings instance is created correctly."""
         assert isinstance(settings, Settings)
+
+    def test_sqlite_settings_instance(self: TestSettings, sqlite_settings: Settings) -> None:
+        """Ensure the sqlite_settings instance is created correctly."""
+        assert isinstance(sqlite_settings, Settings)
+
+    def test_sqlite_database_settings(self: TestSettings, sqlite_settings: Settings) -> None:
+        """Test the SQLite database settings."""
+        db: DatabaseSettings = sqlite_settings.database
+        assert isinstance(db, DatabaseSettings)
+        assert db.backend == "sqlite"
+        assert db.url == "sqlite+aiosqlite:///test.db"
 
     def test_database_settings(self: TestSettings, settings: Settings) -> None:
         """Test the database settings."""

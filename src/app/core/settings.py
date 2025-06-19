@@ -39,9 +39,10 @@ class DatabaseSettings(BaseModel):
         env_nested_delimiter="_",
     )
 
-    url: PostgresDsn | None = Field(
+    backend: str = Field("postgresql+asyncpg", description="Database engine, e.g., 'postgresql+asyncpg' or 'sqlite'")
+    url: str | PostgresDsn | None = Field(
         default=None,
-        description="Full DSN, e.g. postgresql+asyncpg://user:pass@host:port/db"
+        description="Full database URL (overrides other fields if set)"
     )
     hostname: str = Field(
         default="localhost",
@@ -68,17 +69,26 @@ class DatabaseSettings(BaseModel):
     @classmethod
     def build_url_from_components(cls: type[DatabaseSettings], values: dict[str, Any]) -> dict[str, Any]:
         # Only build if `url` is missing
-        if values.get("url") is None:
-            print(values)
-            values["url"] = PostgresDsn.build(
-                scheme="postgresql+asyncpg",
-                username=values["user"],
-                password=values["password"].get_secret_value() if isinstance(values["password"], SecretStr) else values["password"],
-                host=values["hostname"],
-                port=int(values["port"]),
-                path=values["name"]
-            )
-        return values
+            backend = values.get("backend", "postgresql+asyncpg")
+
+            if backend.startswith("sqlite"):
+                # sqlite:///file.db or sqlite:///:memory:
+                db_name: str = values.get("name", "sqlite.db")
+                path = ":memory:" if db_name == ":memory:" else os.path.relpath(db_name)
+                values["url"] = f"sqlite+aiosqlite:///{path}"
+            elif backend.startswith("postgresql"):
+                values["url"] = PostgresDsn.build(
+                    scheme=backend,
+                    username=values["user"],
+                    password=values["password"].get_secret_value() if isinstance(values["password"], SecretStr) else values["password"],
+                    host=values["hostname"],
+                    port=int(values["port"]),
+                    path=values["name"],
+                )
+            else:
+                raise ValueError(f"Unsupported database backend: {backend}")
+
+            return values
 
 class Settings(BaseSettings):
     project_name: str = Field(..., alias="name", description="Project name, e.g., 'Universal API'")

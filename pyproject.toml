@@ -17,6 +17,8 @@ geoalchemy2 = "^0.17.1"
 alembic = "^1.16.2"
 pydantic-settings = "^2.9.1"
 ptw = "^1.0.1"
+aiosqlite = "^0.21.0"
+greenlet = "^3.2.3"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
