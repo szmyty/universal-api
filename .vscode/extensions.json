@@ -1,0 +1,16 @@
+{
+    "recommendations": [
+        "streetsidesoftware.code-spell-checker",
+        "editorconfig.editorconfig",
+        "esbenp.prettier-vscode",
+        "github.vscode-github-actions",
+        "task.vscode-task",
+        "sanjulaganepola.github-local-actions",
+        "richterger.perl",
+        "xyz.local-history",
+        "tamasfe.even-better-toml",
+        "redhat.ansible",
+        "stoplight.spectral",
+        "james-yu.latex-workshop"
+    ]
+}

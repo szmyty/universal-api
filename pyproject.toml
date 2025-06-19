@@ -1,0 +1,72 @@
+[tool.poetry]
+name = "universal-api"
+version = "0.1.0"
+description = "A modular, async-first backend API built with FastAPI, SQLAlchemy, and Alembic. Designed for clean architecture, domain-driven design, and future-proof datastore flexibility."
+authors = ["Alan Szmyt <szmyty@gmail.com>"]
+license = "MIT"
+readme = "README.md"
+package-mode = false
+
+[tool.poetry.dependencies]
+python = "^3.12"
+fastapi = "^0.115.13"
+asyncpg = "^0.30.0"
+fastapi-keycloak-middleware = "^1.3.0"
+sqlalchemy = "^2.0.41"
+geoalchemy2 = "^0.17.1"
+alembic = "^1.16.2"
+pydantic-settings = "^2.9.1"
+ptw = "^1.0.1"
+
+[tool.poetry.group.dev.dependencies]
+pre-commit = "^4.2.0"
+pre-commit-hooks = "^5.0.0"
+pytest = "^8.4.1"
+pytest-asyncio = "1.0.0"
+pytest-mock = "^3.14.1"
+pytest-cov = "^6.2.1"
+faker = "^37.4.0"
+pytest-emoji = "^0.2.0"
+
+[build-system]
+requires = ["poetry-core>=1.5"]
+build-backend = "poetry.core.masonry.api"
+
+[tool.pytest.ini_options]
+minversion = "7.0"
+addopts = "--strict-markers --strict-config --capture=tee-sys -r=a"
+testpaths = ["tests"]
+pythonpath = ["src"]
+markers = [
+  "unit: unit tests",
+  "integration: integration tests",
+  "uses_env: tests that require env file config",
+]
+asyncio_mode = "auto"
+asyncio_default_fixture_loop_scope = "function"
+required_plugins = ["pytest-asyncio", "pytest-mock"]
+cache_dir = ".cache/pytest"
+log_cli = true
+log_cli_level = "DEBUG"
+log_cli_format = "%(asctime)s [%(levelname)s] %(message)s"
+log_file = ".cache/logs/pytest.log"
+log_file_mode = "w"
+log_file_level = "DEBUG"
+log_file_format = "%(asctime)s [%(levelname)s] %(message)s"
+
+[tool.pyright]
+include = ["src"]
+exclude = [
+  "**/node_modules",
+  "**/__pycache__",
+  "src/experimental",
+  "src/typestubs",
+]
+ignore = []
+defineConstant = { DEBUG = true }
+stubPath = "src/stubs"
+reportMissingImports = "error"
+reportMissingTypeStubs = true
+verboseOutput = false
+pythonPlatform = "All"
+typeCheckingMode = "strict"

@@ -1,0 +1,72 @@
+{
+    "folders": [
+        {
+            "path": "."
+        }
+    ],
+    "settings": {
+        "git.ignoreLimitWarning": true,
+        "cSpell.logFile": ".cache/cspell/cspell.log",
+        "cSpell.trustedWorkspace": true,
+        "telemetry.feedback.enabled": false,
+        "emojisense.emojiDecoratorsEnabled": true,
+        "remote.WSL.downloadInBackground": true,
+        "remote.WSL.useShellEnvironment": true,
+        "editor.insertSpaces": true,
+        "remote.autoForwardPorts": true,
+        "terminal.integrated.defaultProfile.linux": "bash",
+        "local-history.enabled": 1,
+        "local-history.daysLimit": 3,
+        "local-history.maxDisplay": 10,
+        "local-history.saveDelay": 0,
+        "local-history.dateLocale": "en-US",
+        "local-history.exclude": [
+            "**/.history/**",
+            "**/.vscode/**",
+            "**/node_modules/**",
+            "**/typings/**",
+            "**/out/**",
+            "**/Code/User/**",
+            "**/*.code-workspace",
+            "**/build/**",
+            "**/dist/**",
+            "**/Notes/**"
+        ],
+        "yaml.schemas": {
+            "https://raw.githubusercontent.com/ansible/ansible-lint/main/src/ansiblelint/schemas/ansible-lint-config.json": "**/.ansible-lint",
+            "https://taskfile.dev/schema.json": "**/Taskfile.yml"
+        },
+        "local-history.path": "${workspaceFolder}/.cache/vscode",
+        "latex-workshop.bibtex-fields.sort.enabled": true,
+        "latex-workshop.bibtex-format.align-equal.enabled": true,
+        "latex-workshop.bibtex-format.sort.enabled": true,
+        "latex-workshop.bibtex-format.trailingComma": false,
+        "latex-workshop.check.duplicatedLabels.enabled": true,
+        "latex-workshop.docker.enabled": false,
+        "latex-workshop.formatting.latex": "latexindent",
+        "latex-workshop.hover.citation.enabled": true,
+        "latex-workshop.hover.command.enabled": true,
+        "latex-workshop.hover.preview.cursor.enabled": true,
+        "latex-workshop.hover.preview.enabled": true,
+        "latex-workshop.hover.ref.enabled": true,
+        "latex-workshop.hover.ref.number.enabled": true,
+        "latex-workshop.intellisense.argumentHint.enabled": true,
+        "latex-workshop.intellisense.optionalArgsEntries.enabled": true,
+        "latex-workshop.intellisense.package.enabled": true,
+        "latex-workshop.intellisense.package.env.enabled": true,
+        "latex-workshop.linting.chktex.enabled": true,
+        "latex-workshop.linting.lacheck.enabled": true,
+        "latex-workshop.latex.autoBuild.run": "never",
+        "files.associations": {
+            ".mailmap": "plaintext"
+        },
+        "cSpell.words": [
+            "customise",
+            "dotenv",
+            "exitstatus",
+            "sessionfinish",
+            "sessionstart",
+            "startpath"
+        ]
+    }
+}

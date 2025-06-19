@@ -1,0 +1,35 @@
+version: "3"
+
+env:
+  PYTHONPYCACHEPREFIX: ".cache/pycache"
+
+tasks:
+  test:
+    desc: Run all unit + integration tests
+    cmds:
+      - poetry run pytest -v --tb=short
+
+  test:unit:
+    desc: Run unit tests only
+    cmds:
+      - poetry run pytest -m unit
+
+  test:int:
+    desc: Run integration tests only
+    cmds:
+      - poetry run pytest -v -m integration
+
+  test:watch:
+    desc: Watch and rerun tests on change (requires ptw)
+    cmds:
+      - poetry run ptw -- --tb=short -v
+
+  lint:
+    desc: Lint code (placeholder, customize per project)
+    cmds:
+      - echo "Add linting with ruff / black"
+
+  shell:
+    desc: Drop into poetry shell with test env loaded
+    cmds:
+      - poetry shell
