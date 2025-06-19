@@ -3,7 +3,8 @@ from __future__ import annotations
 import os
 from pathlib import Path
 from functools import lru_cache
-from pydantic import BaseModel, Field, SecretStr
+from typing import Any
+from pydantic import BaseModel, Field, SecretStr, PostgresDsn, model_validator
 from pydantic_settings import (
     BaseSettings,
     SettingsConfigDict,
@@ -32,45 +33,71 @@ class KeycloakSettings(BaseModel):
     def https_url(self: KeycloakSettings) -> str:
         return f"https://{self.hostname}:{self.https_port}{self.http_relative_path}"
 
-
 class DatabaseSettings(BaseModel):
     model_config = SettingsConfigDict(
         env_prefix="DATABASE_",
         env_nested_delimiter="_",
     )
 
-    hostname: str
-    port: int = 5432
-    user: str = "postgres"
-    password: SecretStr
-    name: str
+    url: PostgresDsn | None = Field(
+        default=None,
+        description="Full DSN, e.g. postgresql+asyncpg://user:pass@host:port/db"
+    )
+    hostname: str = Field(
+        default="localhost",
+        description="Database hostname, e.g., 'localhost' or 'db'"
+    )
+    port: int = Field(
+        default=5432,
+        description="Database port, e.g., 5432 for PostgreSQL"
+    )
+    user: str = Field(
+        default="postgres",
+        description="Database username"
+    )
+    password: SecretStr = Field(
+        default=...,
+        description="Database password, should be kept secret"
+    )
+    name: str = Field(
+        default="universal",
+        description="Database name, e.g., 'universal'"
+    )
 
-    @property
-    def url(self) -> str:
-        return (
-            f"postgresql+asyncpg://{self.user}:{self.password.get_secret_value()}"
-            f"@{self.hostname}:{self.port}/{self.name}"
-        )
-
+    @model_validator(mode="before")
+    @classmethod
+    def build_url_from_components(cls: type[DatabaseSettings], values: dict[str, Any]) -> dict[str, Any]:
+        # Only build if `url` is missing
+        if values.get("url") is None:
+            print(values)
+            values["url"] = PostgresDsn.build(
+                scheme="postgresql+asyncpg",
+                username=values["user"],
+                password=values["password"].get_secret_value() if isinstance(values["password"], SecretStr) else values["password"],
+                host=values["hostname"],
+                port=int(values["port"]),
+                path=values["name"]
+            )
+        return values
 
 class Settings(BaseSettings):
-    project_name: str = Field(default="Universal API")
-    version: str = Field(default="0.1.0")
-    description: str = Field(default="Default project description")
+    project_name: str = Field(..., alias="name", description="Project name, e.g., 'Universal API'")
+    version: str = Field(..., alias="version", description="Project version, e.g., '1.0.0'")
+    description: str = Field(..., alias="description", description="Project description")
+    debug: bool = Field(default=False, alias="UI_DEBUG_MODE", description="Enable debug mode")
+    log_level: str = Field(default="INFO", alias="UI_LOG_LEVEL", description="Logging level for the application")
+    log_file: str = Field(default="logs/app.log", alias="UI_LOG_FILE", description="Path to the log file")
 
-    debug: bool = False
-    log_level: str = "INFO"
-    log_file: str = "logs/app.log"
-    log_json: bool = False
-
-    # database: DatabaseSettings = Field(default_factory=DatabaseSettings)
-    # keycloak: KeycloakSettings = Field(default_factory=KeycloakSettings)
+    database: DatabaseSettings
+    # keycloak: KeycloakSettings
 
     model_config = SettingsConfigDict(
         env_file=os.environ.get("ENV_FILE_OVERRIDE", ".env"),
         env_file_encoding="utf-8",
         case_sensitive=False,
         extra="ignore",
+        env_nested_max_split=1,
+        env_nested_delimiter='_',
         pyproject_toml_table_header=("tool", "poetry"),
     )
 
@@ -96,7 +123,6 @@ class Settings(BaseSettings):
             PyprojectTomlConfigSettingsSource(cls),
             file_secret_settings,
         )
-
 
 @lru_cache()
 def get_settings() -> Settings:

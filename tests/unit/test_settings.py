@@ -4,7 +4,7 @@ import pytest
 from app.core.settings import Settings, KeycloakSettings, DatabaseSettings
 
 @pytest.mark.unit
-def test_test():
+def test_test(settings: Settings) -> None:
     """Dummy test to ensure pytest is working."""
     assert True
 
