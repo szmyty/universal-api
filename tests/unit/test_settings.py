@@ -1,33 +1,25 @@
 from __future__ import annotations
 
+from pydantic import PostgresDsn
 import pytest
 from app.core.settings import Settings, KeycloakSettings, DatabaseSettings
 
 @pytest.mark.unit
-def test_test(settings: Settings) -> None:
-    """Dummy test to ensure pytest is working."""
-    assert True
+@pytest.mark.usefixtures("settings")
+class TestSettings:
+    """Test the Settings class."""
 
-# @pytest.mark.unit
-# @pytest.mark.usefixtures("fresh_settings")
-# def test_debug_settings(fresh_settings):
-#     print("\n[DEBUG] Dumped settings:")
-#     print(fresh_settings.model_dump_json(indent=2))
-#     assert True  # dummy assert to keep it valid
+    def test_settings_instance(self: TestSettings, settings: Settings) -> None:
+        """Ensure the settings instance is created correctly."""
+        assert isinstance(settings, Settings)
 
-# @pytest.mark.unit
-# class TestSettings:
-#     """Test the Settings class."""
-
-#     def test_settings_instance(self: TestSettings, fresh_settings: Settings):
-#         """Ensure the settings instance is created correctly."""
-#         assert isinstance(fresh_settings, Settings)
-
-#     def test_database_settings(self: TestSettings, fresh_settings: Settings):
-#         db: DatabaseSettings = fresh_settings.database
-#         assert db.hostname == "localhost"
-#         assert db.user == "testuser"
-#         assert db.url == "postgresql+asyncpg://testuser:testpass@localhost:5432/universal_test"
+    def test_database_settings(self: TestSettings, settings: Settings) -> None:
+        db: DatabaseSettings = settings.database
+        assert db.hostname == "test.localhost"
+        assert db.port == 5432
+        assert db.name == "universal_test"
+        assert db.user == "testuser"
+        assert db.url == PostgresDsn(url="postgresql+asyncpg://testuser:testpass@test.localhost:5432/universal_test")
 
 #     def test_keycloak_settings(self: TestSettings, fresh_settings: Settings):
 #         kc: KeycloakSettings = fresh_settings.keycloak

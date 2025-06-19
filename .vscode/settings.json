@@ -44,7 +44,8 @@
         "sessionfinish",
         "sessionstart",
         "startpath",
-        "TASKFILE"
+        "TASKFILE",
+        "usefixtures"
     ],
     "json.schemas": [
         {
