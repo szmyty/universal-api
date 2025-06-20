@@ -1,6 +1,8 @@
-from fastapi import APIRouter, Depends
+from fastapi import APIRouter
 
-from app.core.settings import get_settings
+from app.api.routes import healthcheck, messages
 
-settings = get_settings()
+router = APIRouter()
+router.include_router(healthcheck.router)
+router.include_router(messages.router)
 
