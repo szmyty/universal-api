@@ -19,19 +19,37 @@ class KeycloakSettings(BaseModel):
         env_nested_delimiter="_",
     )
 
-    hostname: str = Field(default="keycloak")
-    http_port: int = Field(default=8080)
-    https_port: int = Field(default=8443)
-    realm: str = Field(default="universal")
-    http_relative_path: str = Field(default="/auth")
+    hostname: str = Field(default="keycloak", description="Keycloak service host")
+    http_port: int = Field(default=8080, description="Keycloak HTTP port")
+    https_port: int = Field(default=8443, description="Keycloak HTTPS port")
+    realm: str = Field(default="universal", description="Keycloak realm name")
+    client_id: str = Field(default="universal-client", description="OIDC client ID")
+    client_secret: SecretStr = Field(..., description="OIDC client secret")
+    http_relative_path: str = Field(default="/auth", description="Base Keycloak path")
 
     @property
-    def http_url(self: KeycloakSettings) -> str:
+    def http_url(self) -> str:
         return f"http://{self.hostname}:{self.http_port}{self.http_relative_path}"
 
     @property
-    def https_url(self: KeycloakSettings) -> str:
+    def https_url(self) -> str:
         return f"https://{self.hostname}:{self.https_port}{self.http_relative_path}"
+
+    @property
+    def base_issuer_url(self) -> str:
+        return f"{self.https_url}/realms/{self.realm}"
+
+    @property
+    def openid_config_url(self) -> str:
+        return f"{self.base_issuer_url}/.well-known/openid-configuration"
+
+    @property
+    def token_url(self) -> str:
+        return f"{self.base_issuer_url}/protocol/openid-connect/token"
+
+    @property
+    def jwks_url(self) -> str:
+        return f"{self.base_issuer_url}/protocol/openid-connect/certs"
 
 class DatabaseSettings(BaseModel):
     model_config = SettingsConfigDict(
