@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from pydantic import PostgresDsn
 import pytest
-from app.core.settings import Settings, DatabaseSettings
+from app.core.settings import Settings, DatabaseSettings, KeycloakSettings
 
 @pytest.mark.unit
 @pytest.mark.usefixtures("settings", "sqlite_settings")
@@ -45,9 +45,19 @@ class TestSettings:
         assert settings.log_level == "DEBUG"
         assert settings.log_file == "logs/test_app.log"
 
-#     def test_keycloak_settings(self: TestSettings, fresh_settings: Settings):
-#         kc: KeycloakSettings = fresh_settings.keycloak
-#         assert kc.hostname == "auth.test"
-#         assert kc.realm == "testrealm"
-#         assert kc.http_url.startswith("http://")
-#         assert kc.https_url.startswith("https://")
+
+    def test_keycloak_settings(self: TestSettings) -> None:
+        """Test the Keycloak settings."""
+        kc = KeycloakSettings(
+            hostname="auth.test",
+            realm="testrealm",
+            client_secret="dummy-secret",
+        )
+
+        assert kc.hostname == "auth.test"
+        assert kc.realm == "testrealm"
+        assert kc.http_url.startswith("http://")
+        assert kc.https_url.startswith("https://")
+        assert kc.base_issuer_url.endswith("/realms/testrealm")
+        assert kc.token_url.endswith("/protocol/openid-connect/token")
+        assert kc.jwks_url.endswith("/protocol/openid-connect/certs")
