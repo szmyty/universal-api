@@ -11,7 +11,7 @@ class DefaultHealthCheckRepository(HealthCheckRepository):
         self.dao: HealthDAO = dao
 
     async def check_health(self: DefaultHealthCheckRepository) -> HealthCheck:
-        db_healthy = await self.dao.ping()
+        db_healthy: bool = await self.dao.ping()
         return HealthCheck(
             status=HealthStatus.HEALTHY if db_healthy else HealthStatus.UNHEALTHY,
             timestamp=datetime.now(timezone.utc),

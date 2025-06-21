@@ -9,7 +9,7 @@ from app.db.models import Message
 
 class MessageDAO:
     def __init__(self: MessageDAO, repository: MessageRepository) -> None:
-        self.repository = repository
+        self.repository: MessageRepository = repository
 
     async def create_message(self: MessageDAO, data: MessageCreate) -> Message:
         return await self.repository.create(content=data.content, author=data.author)

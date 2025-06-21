@@ -87,12 +87,12 @@ class DatabaseSettings(BaseModel):
     @classmethod
     def build_url_from_components(cls: type[DatabaseSettings], values: dict[str, Any]) -> dict[str, Any]:
         # Only build if `url` is missing
-            backend = values.get("backend", "postgresql+asyncpg")
+            backend: str = str(values.get("backend", "postgresql+asyncpg"))
 
             if backend.startswith("sqlite"):
                 # sqlite:///file.db or sqlite:///:memory:
                 db_name: str = values.get("name", "sqlite.db")
-                path = ":memory:" if db_name == ":memory:" else os.path.relpath(db_name)
+                path: str = ":memory:" if db_name == ":memory:" else os.path.relpath(db_name)
                 values["url"] = f"sqlite+aiosqlite:///{path}"
             elif backend.startswith("postgresql"):
                 values["url"] = PostgresDsn.build(
@@ -117,7 +117,7 @@ class Settings(BaseSettings):
     log_file: str = Field(default="logs/app.log", alias="UI_LOG_FILE", description="Path to the log file")
 
     database: DatabaseSettings
-    # keycloak: KeycloakSettings
+    keycloak: KeycloakSettings
 
     model_config = SettingsConfigDict(
         env_file=os.environ.get("ENV_FILE_OVERRIDE", ".env"),
@@ -155,6 +155,6 @@ class Settings(BaseSettings):
 @lru_cache()
 def get_settings() -> Settings:
     settings = Settings()
-    log_dir = Path(settings.log_file).parent
+    log_dir: Path = Path(settings.log_file).parent
     log_dir.mkdir(parents=True, exist_ok=True)
     return settings

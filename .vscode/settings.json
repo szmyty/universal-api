@@ -41,6 +41,7 @@
         "customise",
         "dotenv",
         "exitstatus",
+        "healthcheck",
         "poolclass",
         "sessionfinish",
         "sessionmaker",

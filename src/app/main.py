@@ -4,8 +4,9 @@ from fastapi import FastAPI
 
 from app.api.api import router as api_router
 from app.core.settings import get_settings
+from app.core.settings import Settings
 
-settings = get_settings()
+settings: Settings = get_settings()
 
 app = FastAPI(title=settings.project_name, version=settings.version, description=settings.description)
 app.include_router(api_router)

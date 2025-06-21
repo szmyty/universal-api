@@ -10,7 +10,7 @@ class MockHealthCheckRepository(HealthCheckRepository):
     """Mock implementation of HealthCheckRepository for testing purposes."""
     def __init__(self: MockHealthCheckRepository, healthy: bool | None = None) -> None:
         # If healthy is not provided, randomize it
-        self.healthy = healthy if healthy is not None else random.choice([True, False])
+        self.healthy: bool = healthy if healthy is not None else random.choice([True, False])
 
     async def check_health(self: MockHealthCheckRepository) -> HealthCheck:
         """Return a mock health check status."""

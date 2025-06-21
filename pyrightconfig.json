@@ -1,0 +1,7 @@
+{
+    "typeCheckingMode": "strict",
+    "extraPaths": ["typings"],
+    "reportUnknownVariableType": "none",
+    "reportAttributeAccessIssue": "none",
+    "reportUnusedImport": "none"
+}
