@@ -23,7 +23,7 @@ keycloak = KeycloakConfiguration(
     ],
     reject_on_missing_claim=False,
     authentication_scheme="Bearer",
-    authorization_method=AuthorizationMethod.NONE
+    authorization_method=AuthorizationMethod.NONE,
     authorization_claim="roles",
     use_introspection_endpoint=False,
     enable_device_authentication=False,

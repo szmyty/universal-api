@@ -26,6 +26,8 @@ class KeycloakSettings(BaseModel):
     client_id: str = Field(default="universal-client", description="OIDC client ID")
     client_secret: SecretStr = Field(..., description="OIDC client secret")
     http_relative_path: str = Field(default="/auth", description="Base Keycloak path")
+    swagger_client_id: str = Field(default="swagger-ui", description="Client ID used for Swagger UI OAuth2 authorization")
+    verify_ssl: bool = Field(default=True, description="Whether to verify Keycloak's SSL certificate")
 
     @property
     def http_url(self) -> str:
