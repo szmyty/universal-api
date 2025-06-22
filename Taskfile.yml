@@ -29,3 +29,9 @@ tasks:
     cmds:
       - poetry run python -m fastapi run src/app/main.py --host 127.0.0.1 --port 8005 --reload
     silent: true
+
+  tree:
+    desc: Generate directory tree structure
+    cmds:
+      - tree -L 3 -I "node_modules|.venv|reports|.cache|deprecated"
+    silent: true

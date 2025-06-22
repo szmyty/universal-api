@@ -10,7 +10,7 @@ from app.db.session import get_async_session
 from app.infrastructure.messages.repository import MessageRepository
 from app.infrastructure.messages.dao import MessageDAO
 from app.services.message_service import MessageService
-from app.db.models.message import Message
+from app.db.entities.message import Message
 
 router = APIRouter(prefix="/api/messages")
 

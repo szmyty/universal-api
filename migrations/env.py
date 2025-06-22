@@ -8,7 +8,7 @@ from alembic import context
 
 from app.core.settings import get_settings
 from app.db.base import Base
-from app.db.models import message  # ensure models are imported
+from app.db.entities import message  # ensure models are imported
 
 config = context.config
 fileConfig(config.config_file_name)

@@ -3,7 +3,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from structlog import BoundLogger
 
 from app.core.logging import get_logger
-from app.schemas.healthcheck import HealthCheckResponse
+from app.schemas.health.response import HealthCheckResponse
 from app.db.session import get_async_session
 from app.services.health_service import HealthCheckService
 from app.infrastructure.health.repository import DefaultHealthCheckRepository
@@ -23,4 +23,5 @@ async def healthcheck(session: AsyncSession = Depends(get_async_session)) -> Hea
 
     result: HealthCheck = await service.run()
     log.info("Health check result", result=result)
-    return HealthCheckResponse.model_validate(result.model_dump())
+
+    return result.to_response()

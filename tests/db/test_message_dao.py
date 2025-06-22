@@ -2,7 +2,7 @@ from typing import Sequence
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from app.db.models.message import Message
+from app.db.entities.message import Message
 from app.infrastructure.messages.repository import MessageRepository
 from app.infrastructure.messages.dao import MessageDAO
 from app.schemas.message import MessageCreate, MessageUpdate

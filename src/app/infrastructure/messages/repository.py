@@ -6,7 +6,7 @@ from typing import Sequence, Tuple
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy import Result, select
 
-from app.db.models import Message
+from app.db.entities import Message
 
 class MessageRepository:
     def __init__(self: MessageRepository, session: AsyncSession) -> None:

@@ -9,7 +9,7 @@ from sqlalchemy.types import Uuid
 from app.db.base import Base
 
 class Message(Base):
-    __tablename__ = "messages"
+    __tablename__: str = "messages"
 
     id: Mapped[uuid.UUID] = mapped_column(Uuid, primary_key=True, default=uuid.uuid4)
     content: Mapped[str] = mapped_column(Text, nullable=False)

@@ -5,7 +5,7 @@ from typing import Sequence
 
 from app.infrastructure.messages.dao import MessageDAO
 from app.schemas.message import MessageCreate, MessageUpdate
-from app.db.models import Message
+from app.db.entities import Message
 
 class MessageService:
     def __init__(self: MessageService, dao: MessageDAO) -> None:
