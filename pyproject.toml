@@ -5,11 +5,21 @@ description = "A modular, async-first backend API built with FastAPI, SQLAlchemy
 authors = ["Alan Szmyt <szmyty@gmail.com>"]
 license = "MIT"
 readme = "README.md"
-package-mode = false
+homepage = "https://github.com/szmyty/universal"
+repository = "https://github.com/szmyty/universal"
+documentation = "https://github.com/szmyty/universal"
+# package-mode = false
+keywords = ["api", "universal", "project"]
+classifiers = [
+  "Programming Language :: Python :: 3",
+  "License :: OSI Approved :: MIT License",
+  "Operating System :: OS Independent",
+]
+packages = [{ include = "app", from = "src" }]
 
 [tool.poetry.dependencies]
 python = "^3.12"
-fastapi = "^0.115.13"
+fastapi = { extras = ["all"], version = "^0.115.13" }
 asyncpg = "^0.30.0"
 fastapi-keycloak-middleware = "^1.3.0"
 sqlalchemy = "^2.0.41"

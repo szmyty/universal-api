@@ -121,6 +121,7 @@ class Settings(BaseSettings):
     debug: bool = Field(default=False, alias="UI_DEBUG_MODE", description="Enable debug mode")
     log_level: str = Field(default="INFO", alias="UI_LOG_LEVEL", description="Logging level for the application")
     log_file: str = Field(default="logs/app.log", alias="UI_LOG_FILE", description="Path to the log file")
+    api_prefix: str = Field(default="/api", alias="API_PREFIX", description="API URL prefix")
 
     database: DatabaseSettings
     keycloak: KeycloakSettings
@@ -143,6 +144,14 @@ class Settings(BaseSettings):
     def license_info(self: Settings) -> dict[str, str]:
         from app.utils.license import get_license_info
         return get_license_info(self.license)
+
+    @property
+    def contact(self: Settings) -> dict[str, str]:
+        return {
+            "name": "Alan Szmyt",
+            "url": f"https://{self.fqdn}/contact/",
+            "email": "szmyty@gmail.com",
+        }
 
     @classmethod
     def settings_customise_sources(

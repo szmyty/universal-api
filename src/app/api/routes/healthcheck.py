@@ -1,7 +1,7 @@
 from fastapi import APIRouter, Depends
 from sqlalchemy.ext.asyncio import AsyncSession
 
-from schemas.healthcheck import HealthCheckResponse
+from app.schemas.healthcheck import HealthCheckResponse
 from app.db.session import get_async_session
 from app.services.health_service import HealthCheckService
 from app.infrastructure.health.repository import DefaultHealthCheckRepository

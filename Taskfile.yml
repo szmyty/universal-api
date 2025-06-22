@@ -9,6 +9,7 @@ includes:
 
 env:
   PYTHONPYCACHEPREFIX: ".cache/pycache"
+  PYTHONPATH: src
 
 tasks:
   lint:
@@ -21,4 +22,10 @@ tasks:
     desc: Drop into poetry shell with test env loaded
     cmds:
       - poetry shell
+    silent: true
+
+  run:api:
+    desc: Run the FastAPI API locally using Poetry
+    cmds:
+      - poetry run python -m fastapi run src/app/main.py --host 127.0.0.1 --port 8005 --reload
     silent: true
