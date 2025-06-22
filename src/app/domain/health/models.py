@@ -1,11 +1,10 @@
-from dataclasses import dataclass
-from datetime import datetime
+from datetime import datetime, timezone
 from typing import Dict
+from pydantic import BaseModel, Field
 from .enums import HealthStatus
 
-@dataclass
-class HealthCheck:
-    """Domain data class representing the health check status."""
+class HealthCheck(BaseModel):
+    """Domain model representing the health check status."""
     status: HealthStatus
-    timestamp: datetime
+    timestamp: datetime = Field(default_factory=lambda: datetime.now(timezone.utc))
     details: Dict[str, str]

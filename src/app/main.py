@@ -5,7 +5,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.utils import generate_unique_id
-from structlog.stdlib import BoundLogger
+from structlog import BoundLogger
 
 from app.api.api import router as api_router
 from app.core.settings import get_settings
