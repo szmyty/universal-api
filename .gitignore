@@ -40,6 +40,7 @@ venv/
 bower_components/
 target/
 .pytest_cache/
+**/__pycache__/
 
 # ─── Output & Build ──────────────────────────────────────────────────────
 # dist/
