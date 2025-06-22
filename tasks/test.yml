@@ -1,0 +1,57 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+# Taskfile for managing development tasks in a multi-platform environment
+
+version: "3"
+
+env:
+  PYTHONPYCACHEPREFIX: ".cache/pycache"
+
+tasks:
+  all:
+    desc: Run all unit + integration tests
+    cmds:
+      - poetry run pytest -v --tb=short
+    silent: true
+
+  unit:
+    desc: Run unit tests only
+    cmds:
+      - poetry run pytest -m unit
+    silent: true
+
+  int:
+    desc: Run integration tests only
+    cmds:
+      - poetry run pytest -v -m integration
+    silent: true
+
+  watch:
+    desc: Watch and rerun tests on change (requires ptw)
+    cmds:
+      - poetry run ptw -- --tb=short -v
+    silent: true
+
+  settings:
+    desc: Run settings tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/unit/test_settings.py --tb=short
+    silent: true
+
+  health:
+    desc: Run health tests
+    cmds:
+      - poetry run pytest -m health --tb=short
+    silent: true
+
+  health:service:
+    desc: Run health service tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/services/test_health_service.py --tb=short
+    silent: true
+
+  utils:license:
+    desc: Run license utility tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/utils/test_licenses.py --tb=short
+    silent: true

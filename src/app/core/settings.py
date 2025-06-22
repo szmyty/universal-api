@@ -12,8 +12,10 @@ from pydantic_settings import (
     DotEnvSettingsSource,
     PyprojectTomlConfigSettingsSource,
 )
+from spdx_license_list import LICENSES
 
 class KeycloakSettings(BaseModel):
+    """Configuration for connecting to Keycloak OIDC server."""
     model_config = SettingsConfigDict(
         env_prefix="KEYCLOAK_",
         env_nested_delimiter="_",
@@ -30,27 +32,27 @@ class KeycloakSettings(BaseModel):
     verify_ssl: bool = Field(default=True, description="Whether to verify Keycloak's SSL certificate")
 
     @property
-    def http_url(self) -> str:
+    def http_url(self: KeycloakSettings) -> str:
         return f"http://{self.hostname}:{self.http_port}{self.http_relative_path}"
 
     @property
-    def https_url(self) -> str:
+    def https_url(self: KeycloakSettings) -> str:
         return f"https://{self.hostname}:{self.https_port}{self.http_relative_path}"
 
     @property
-    def base_issuer_url(self) -> str:
+    def base_issuer_url(self: KeycloakSettings) -> str:
         return f"{self.https_url}/realms/{self.realm}"
 
     @property
-    def openid_config_url(self) -> str:
+    def openid_config_url(self: KeycloakSettings) -> str:
         return f"{self.base_issuer_url}/.well-known/openid-configuration"
 
     @property
-    def token_url(self) -> str:
+    def token_url(self: KeycloakSettings) -> str:
         return f"{self.base_issuer_url}/protocol/openid-connect/token"
 
     @property
-    def jwks_url(self) -> str:
+    def jwks_url(self: KeycloakSettings) -> str:
         return f"{self.base_issuer_url}/protocol/openid-connect/certs"
 
 class DatabaseSettings(BaseModel):
@@ -114,6 +116,8 @@ class Settings(BaseSettings):
     project_name: str = Field(..., alias="name", description="Project name, e.g., 'Universal API'")
     version: str = Field(..., alias="version", description="Project version, e.g., '1.0.0'")
     description: str = Field(..., alias="description", description="Project description")
+    license: str = Field(default="MIT", alias="license", description="License type, e.g., 'MIT'")
+    fqdn: str = Field(default="localhost", alias="FQDN", description="Fully qualified domain name for the service")
     debug: bool = Field(default=False, alias="UI_DEBUG_MODE", description="Enable debug mode")
     log_level: str = Field(default="INFO", alias="UI_LOG_LEVEL", description="Logging level for the application")
     log_file: str = Field(default="logs/app.log", alias="UI_LOG_FILE", description="Path to the log file")
@@ -130,6 +134,15 @@ class Settings(BaseSettings):
         env_nested_delimiter='_',
         pyproject_toml_table_header=("tool", "poetry"),
     )
+
+    @property
+    def terms_of_service(self: Settings) -> str:
+        return f"https://{self.fqdn}/terms/"
+
+    @property
+    def license_info(self: Settings) -> dict[str, str]:
+        from app.utils.license import get_license_info
+        return get_license_info(self.license)
 
     @classmethod
     def settings_customise_sources(
@@ -153,6 +166,12 @@ class Settings(BaseSettings):
             PyprojectTomlConfigSettingsSource(cls),
             file_secret_settings,
         )
+
+    @model_validator(mode="after")
+    def validate_license(self) -> Settings:
+        if self.license not in LICENSES:
+            raise ValueError(f"Invalid SPDX license ID: {self.license}")
+        return self
 
 @lru_cache()
 def get_settings() -> Settings:

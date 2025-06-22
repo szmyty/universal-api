@@ -1523,6 +1523,18 @@ files = [
 ]
 
 [[package]]
+name = "spdx-license-list"
+version = "3.26.0"
+description = "SPDX License List as a Python dictionary"
+optional = false
+python-versions = ">=3.9"
+groups = ["main"]
+files = [
+    {file = "spdx_license_list-3.26.0-py3-none-any.whl", hash = "sha256:dab69ae676e822623bb64ddfd0a4061a4a264498ca10799ac8e98592ca813f49"},
+    {file = "spdx_license_list-3.26.0.tar.gz", hash = "sha256:dc8eed9acdf070deba0e6ac9335d704f0e3338d30895000d911c70e4b7853e5b"},
+]
+
+[[package]]
 name = "sqlalchemy"
 version = "2.0.41"
 description = "Database Abstraction Library"
@@ -1637,6 +1649,18 @@ anyio = ">=3.6.2,<5"
 full = ["httpx (>=0.27.0,<0.29.0)", "itsdangerous", "jinja2", "python-multipart (>=0.0.18)", "pyyaml"]
 
 [[package]]
+name = "structlog"
+version = "25.4.0"
+description = "Structured Logging for Python"
+optional = false
+python-versions = ">=3.8"
+groups = ["main"]
+files = [
+    {file = "structlog-25.4.0-py3-none-any.whl", hash = "sha256:fe809ff5c27e557d14e613f45ca441aabda051d119ee5a0102aaba6ce40eed2c"},
+    {file = "structlog-25.4.0.tar.gz", hash = "sha256:186cd1b0a8ae762e29417095664adf1d6a31702160a46dacb7796ea82f7409e4"},
+]
+
+[[package]]
 name = "typing-extensions"
 version = "4.14.0"
 description = "Backported and Experimental Type Hints for Python 3.9+"
@@ -1717,4 +1741,4 @@ test = ["covdefaults (>=2.3)", "coverage (>=7.2.7)", "coverage-enable-subprocess
 [metadata]
 lock-version = "2.1"
 python-versions = "^3.12"
-content-hash = "c728e681b5c36dd0432fa590330331eabc9eb46780dabe651cc38d1a074c033b"
+content-hash = "232982c64bbfc25b0097dbf5443c92a7e88882e2b9fb9815031a4620f5add0a0"

@@ -19,6 +19,8 @@ pydantic-settings = "^2.9.1"
 ptw = "^1.0.1"
 aiosqlite = "^0.21.0"
 greenlet = "^3.2.3"
+structlog = "^25.4.0"
+spdx-license-list = "^3.26.0"
 
 [tool.poetry.group.dev.dependencies]
 pre-commit = "^4.2.0"
@@ -43,6 +45,7 @@ markers = [
   "unit: unit tests",
   "integration: integration tests",
   "uses_env: tests that require env file config",
+  "health: tests related to health checks",
 ]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"

@@ -6,6 +6,7 @@ from sqlalchemy.ext.asyncio import AsyncSession
 from app.api.routes.messages import router as messages_router
 from app.db.session import get_async_session
 
+
 @pytest.fixture
 async def test_app(db_session: AsyncSession) -> FastAPI:
     app = FastAPI()
@@ -16,7 +17,6 @@ async def test_app(db_session: AsyncSession) -> FastAPI:
     app.dependency_overrides[get_async_session] = override
     app.include_router(messages_router)
     return app
-
 
 @pytest.mark.anyio
 async def test_messages_api_crud(test_app: FastAPI) -> None:

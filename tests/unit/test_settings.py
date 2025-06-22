@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from pydantic import PostgresDsn
+from pydantic import PostgresDsn, SecretStr
 import pytest
 from app.core.settings import Settings, DatabaseSettings, KeycloakSettings
 
@@ -45,13 +45,12 @@ class TestSettings:
         assert settings.log_level == "DEBUG"
         assert settings.log_file == "logs/test_app.log"
 
-
     def test_keycloak_settings(self: TestSettings) -> None:
         """Test the Keycloak settings."""
         kc = KeycloakSettings(
             hostname="auth.test",
             realm="testrealm",
-            client_secret="dummy-secret",
+            client_secret=SecretStr("dummy-secret"),
         )
 
         assert kc.hostname == "auth.test"
