@@ -5,6 +5,7 @@ import platform
 import getpass
 
 from pathlib import Path
+from tzlocal import get_localzone_name
 from functools import lru_cache
 from typing import Any
 from pydantic import BaseModel, Field, SecretStr, PostgresDsn, model_validator
@@ -124,6 +125,7 @@ class SystemSettings(BaseModel):
     user: str = Field(default_factory=getpass.getuser)
     inside_container: bool = Field(default_factory=lambda: Path("/.dockerenv").exists())
     ci: bool = Field(default_factory=lambda: "CI" in os.environ)
+    timezone: str = Field(default_factory=get_localzone_name)
 
 class Settings(BaseSettings):
     project_name: str = Field(..., alias="name", description="Project name, e.g., 'Universal API'")

@@ -5,6 +5,7 @@ import pytest
 from pydantic import PostgresDsn, SecretStr
 
 from app.core.settings import Settings, DatabaseSettings, KeycloakSettings, SystemSettings
+from app.utils.timezone import is_valid_iana_timezone
 from app.utils.shell import KNOWN_SHELLS
 
 @pytest.mark.unit
@@ -81,3 +82,7 @@ class TestSettings:
         root: Path = settings.system.project_root
         assert root.name in {"universal-api", "src", ".files"}  # or whatever your root dir name is
         assert isinstance(root, type(root))  # sanity check it's a Path-like
+
+    def test_valid_iana_timezone(self: TestSettings, settings: Settings) -> None:
+        """The timezone should be a valid IANA timezone string."""
+        assert is_valid_iana_timezone(settings.system.timezone)
