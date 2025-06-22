@@ -1,6 +1,9 @@
 from __future__ import annotations
 
 import os
+import platform
+import getpass
+
 from pathlib import Path
 from functools import lru_cache
 from typing import Any
@@ -112,6 +115,16 @@ class DatabaseSettings(BaseModel):
 
             return values
 
+class SystemSettings(BaseModel):
+    project_root: Path = Field(default_factory=lambda: Path(__file__).resolve().parents[3])
+    shell: str = Field(default_factory=lambda: Path(os.environ.get("SHELL", "unknown")).name)
+    os_name: str = Field(default_factory=platform.system)
+    os_version: str = Field(default_factory=platform.version)
+    python_version: str = Field(default_factory=lambda: platform.python_version())
+    user: str = Field(default_factory=getpass.getuser)
+    inside_container: bool = Field(default_factory=lambda: Path("/.dockerenv").exists())
+    ci: bool = Field(default_factory=lambda: "CI" in os.environ)
+
 class Settings(BaseSettings):
     project_name: str = Field(..., alias="name", description="Project name, e.g., 'Universal API'")
     version: str = Field(..., alias="version", description="Project version, e.g., '1.0.0'")
@@ -125,6 +138,7 @@ class Settings(BaseSettings):
 
     database: DatabaseSettings
     keycloak: KeycloakSettings
+    system: SystemSettings = Field(default_factory=SystemSettings)
 
     model_config = SettingsConfigDict(
         env_file=os.environ.get("ENV_FILE_OVERRIDE", ".env"),

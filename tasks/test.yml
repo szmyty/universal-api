@@ -35,7 +35,7 @@ tasks:
   settings:
     desc: Run settings tests
     cmds:
-      - poetry run pytest {{.ROOT_DIR}}/tests/unit/test_settings.py --tb=short
+      - poetry run pytest {{.ROOT_DIR}}/tests/core/test_settings.py --tb=short
     silent: true
 
   health:
@@ -48,6 +48,24 @@ tasks:
     desc: Run health service tests
     cmds:
       - poetry run pytest {{.ROOT_DIR}}/tests/services/test_health_service.py --tb=short
+    silent: true
+
+  health:dao:
+    desc: Run health DAO tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/db/test_health_dao.py --tb=short
+    silent: true
+
+  health:repository:
+    desc: Run health repository tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/db/test_health_repository.py --tb=short
+    silent: true
+
+  health:api:
+    desc: Run health API tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/api/test_health_api.py --tb=short
     silent: true
 
   utils:license:

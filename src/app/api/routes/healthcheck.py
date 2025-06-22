@@ -14,14 +14,17 @@ log: BoundLogger = get_logger()
 
 router = APIRouter()
 
-@router.get("/health", response_model=HealthCheckResponse)
-async def healthcheck(session: AsyncSession = Depends(get_async_session)) -> HealthCheckResponse:
-    """Endpoint to check the health of the application."""
+def get_healthcheck_service(
+    session: AsyncSession = Depends(get_async_session),
+) -> HealthCheckService:
     dao = HealthDAO(session)
     repo = DefaultHealthCheckRepository(dao)
-    service = HealthCheckService(repo)
+    return HealthCheckService(repo)
 
+@router.get("/health", response_model=HealthCheckResponse)
+async def healthcheck(
+    service: HealthCheckService = Depends(get_healthcheck_service),
+) -> HealthCheckResponse:
     result: HealthCheck = await service.run()
     log.info("Health check result", result=result)
-
     return result.to_response()

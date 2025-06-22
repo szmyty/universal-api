@@ -1,8 +1,11 @@
 from __future__ import annotations
+from pathlib import Path
 
-from pydantic import PostgresDsn, SecretStr
 import pytest
-from app.core.settings import Settings, DatabaseSettings, KeycloakSettings
+from pydantic import PostgresDsn, SecretStr
+
+from app.core.settings import Settings, DatabaseSettings, KeycloakSettings, SystemSettings
+from app.utils.shell import KNOWN_SHELLS
 
 @pytest.mark.unit
 @pytest.mark.usefixtures("settings", "sqlite_settings")
@@ -60,3 +63,21 @@ class TestSettings:
         assert kc.base_issuer_url.endswith("/realms/testrealm")
         assert kc.token_url.endswith("/protocol/openid-connect/token")
         assert kc.jwks_url.endswith("/protocol/openid-connect/certs")
+
+    def test_system_settings_defaults(self: TestSettings, settings: Settings) -> None:
+        """Test that system settings are populated with expected defaults."""
+        sys: SystemSettings = settings.system
+
+        assert sys.project_root.exists()
+        assert sys.shell in KNOWN_SHELLS
+        assert isinstance(sys.os_name, str)
+        assert isinstance(sys.os_version, str)
+        assert isinstance(sys.python_version, str)
+        assert isinstance(sys.user, str)
+        assert isinstance(sys.inside_container, bool)
+
+    def test_project_root_is_path(self: TestSettings, settings: Settings) -> None:
+        """Project root should resolve to a Path object and point to the repo root."""
+        root: Path = settings.system.project_root
+        assert root.name in {"universal-api", "src", ".files"}  # or whatever your root dir name is
+        assert isinstance(root, type(root))  # sanity check it's a Path-like

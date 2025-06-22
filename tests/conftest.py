@@ -14,6 +14,7 @@ from app.db.base import Base
 
 @pytest.fixture(scope="session")
 def anyio_backend() -> Literal['asyncio']:
+    """Fixture to specify the AnyIO backend for async tests."""
     return "asyncio"
 
 @pytest.fixture(scope="function")
