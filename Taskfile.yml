@@ -12,6 +12,12 @@ env:
   PYTHONPATH: src
 
 tasks:
+  install:
+    desc: Install dependencies using Poetry
+    cmds:
+      - poetry install --no-interaction --no-root
+    silent: true
+
   lint:
     desc: Lint code (placeholder, customize per project)
     cmds:
