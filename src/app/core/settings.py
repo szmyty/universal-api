@@ -5,6 +5,7 @@ import platform
 import getpass
 
 from pathlib import Path
+from structlog import BoundLogger
 from tzlocal import get_localzone_name
 from functools import lru_cache
 from typing import Any
@@ -197,6 +198,15 @@ class Settings(BaseSettings):
         if self.license not in LICENSES:
             raise ValueError(f"Invalid SPDX license ID: {self.license}")
         return self
+
+    def print_settings_summary(self: Settings) -> None:
+        """Logs a summary of the current settings, masking sensitive information."""
+        from app.core.logging import get_logger
+        log: BoundLogger = get_logger()
+        log.info("Application Settings Summary", settings=self.model_dump())
+        safe_settings: dict[str, Any | str] = {k: v if not isinstance(v, SecretStr) else "********" for k, v in self.model_dump().items()}
+        for key, value in safe_settings.items():
+            log.info(f"  {key}: {value}")
 
 @lru_cache()
 def get_settings() -> Settings:

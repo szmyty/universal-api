@@ -15,7 +15,7 @@ class MessageUpdate(BaseModel):
     """Model for updating a message."""
     content: str = Field(..., examples=["Updated message"])
 
-class MessageOut(MessageBase):
+class MessageRead(MessageBase):
     """Model for outputting a message."""
     id: int
     user_id: str

@@ -2,13 +2,18 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from typing import AsyncGenerator
-from fastapi import FastAPI
+from fastapi import FastAPI, Request
 from fastapi.responses import JSONResponse
 from fastapi.utils import generate_unique_id
 from fastapi.middleware.gzip import GZipMiddleware
+from fastapi_keycloak_middleware.setup import setup_keycloak_middleware
 from structlog import BoundLogger
+from starlette.exceptions import HTTPException as StarletteHTTPException
+from starlette.status import HTTP_404_NOT_FOUND, HTTP_500_INTERNAL_SERVER_ERROR
 
 from app.api.api import router as api_router
+from app.auth.keycloak import keycloak, excluded_endpoints
+from app.auth.oidc_user import map_oidc_user
 from app.core.settings import get_settings
 from app.core.settings import Settings
 from app.db.migrations import run_migrations_async
@@ -61,6 +66,15 @@ app = FastAPI(
     generate_unique_id_function=generate_unique_id,
     separate_input_output_schemas=True
 )
+
+# Add keycloak middleware
+setup_keycloak_middleware(
+    app=app,
+    keycloak_configuration=keycloak,
+    user_mapper=map_oidc_user,
+    exclude_patterns=excluded_endpoints
+)
+
 app.include_router(api_router)
 
 app.middleware("http")(log_context_middleware)
@@ -69,6 +83,7 @@ app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
 async def startup(app: FastAPI) -> None:
     log.info("🚀 Startup initiated")
+    settings.print_settings_summary()
     await run_migrations_async()
     log.info("✅ Application startup complete")
 
@@ -76,3 +91,25 @@ async def shutdown(app: FastAPI) -> None:
     log.info("🛑 Shutting down")
     # await engine.dispose()
     log.info("🛑 Shutdown complete")
+
+@app.exception_handler(StarletteHTTPException)
+async def http_exception_handler(request: Request, exc: StarletteHTTPException) -> JSONResponse:
+    """Custom handler for HTTP exceptions."""
+    if exc.status_code == HTTP_404_NOT_FOUND:
+        return JSONResponse(
+            status_code=exc.status_code,
+            content={"detail": "The requested resource was not found."},
+        )
+    return JSONResponse(
+        status_code=exc.status_code,
+        content={"detail": exc.detail},
+    )
+
+@app.exception_handler(Exception)
+async def unhandled_exception_handler(request: Request, exc: Exception) -> JSONResponse:
+    """Custom handler for unhandled exceptions."""
+    log.error("Unhandled exception occurred", error=str(exc), exc_info=exc)
+    return JSONResponse(
+        status_code=HTTP_500_INTERNAL_SERVER_ERROR,
+        content={"detail": "An internal server error occurred."},
+    )

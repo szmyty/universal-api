@@ -1,4 +1,4 @@
-from fastapi_keycloak_middleware import KeycloakConfiguration, setup_keycloak_middleware, FastApiUser, AuthorizationMethod
+from fastapi_keycloak_middleware import KeycloakConfiguration, FastApiUser, AuthorizationMethod
 
 from app.core.settings import get_settings, Settings
 
@@ -35,3 +35,6 @@ keycloak = KeycloakConfiguration(
     websocket_cookie_name="access_token"
 )
 
+excluded_endpoints: list[str] = [
+    "^/health/?$"
+]

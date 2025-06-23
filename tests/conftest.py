@@ -9,6 +9,7 @@ from pytest import ExitCode, Session
 from sqlalchemy.ext.asyncio import create_async_engine, AsyncSession, AsyncEngine, async_sessionmaker
 from sqlalchemy.pool import StaticPool
 
+from app.auth.oidc_user import OIDCUser
 from app.core.settings import Settings
 from app.db.base import Base
 
@@ -29,6 +30,18 @@ async def test_engine() -> AsyncGenerator[AsyncEngine, None]:
         await conn.run_sync(Base.metadata.create_all)
     yield engine
     await engine.dispose()
+
+@pytest.fixture
+def test_user() -> OIDCUser:
+    """Fixture to provide a mock OIDCUser for testing."""
+    return OIDCUser(
+        sub="test-user-id",
+        email="test@example.com",
+        given_name="Test",
+        family_name="User",
+        roles=["user"],
+        preferred_username="testuser"
+    )
 
 @pytest.fixture(scope="function")
 async def db_session(test_engine: AsyncEngine) -> AsyncGenerator[AsyncSession, None]:

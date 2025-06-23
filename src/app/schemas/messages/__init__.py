@@ -1,1 +1,1 @@
-from .messages import MessageCreate, MessageUpdate, MessageOut
+from .messages import MessageCreate, MessageUpdate, MessageRead

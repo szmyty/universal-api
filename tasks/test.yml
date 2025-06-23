@@ -68,6 +68,12 @@ tasks:
       - poetry run pytest {{.ROOT_DIR}}/tests/api/test_health_api.py --tb=short
     silent: true
 
+  messages:service:
+    desc: Run messages service tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/services/test_messages_service.py --tb=short
+    silent: true
+
   messages:dao:
     desc: Run messages DAO tests
     cmds:
@@ -78,6 +84,12 @@ tasks:
     desc: Run messages repository tests
     cmds:
       - poetry run pytest {{.ROOT_DIR}}/tests/db/test_messages_repository.py --tb=short
+    silent: true
+
+  profile:api:
+    desc: Run profile API tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/api/test_profile_api.py --tb=short
     silent: true
 
   utils:license:
