@@ -98,6 +98,36 @@ tasks:
       - poetry run pytest {{.ROOT_DIR}}/tests/api/test_profile_api.py --tb=short
     silent: true
 
+  mapstate:
+    desc: Run map state tests
+    cmds:
+      - poetry run pytest -m map_states --tb=short
+    silent: true
+
+  mapstate:service:
+    desc: Run map state service tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/services/test_map_states_service.py --tb=short
+    silent: true
+
+  mapstate:dao:
+    desc: Run map state DAO tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/db/test_map_states_dao.py --tb=short
+    silent: true
+
+  mapstate:repository:
+    desc: Run map state repository tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/db/test_map_states_repository.py --tb=short
+    silent: true
+
+  mapstate:api:
+    desc: Run map state API tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/api/test_map_states_api.py --tb=short
+    silent: true
+
   utils:license:
     desc: Run license utility tests
     cmds:

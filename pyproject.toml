@@ -61,6 +61,7 @@ markers = [
   "db: tests related to database interactions",
   "auth: tests related to authentication and authorization",
   "messages: tests related to messaging functionality",
+  "map_states: tests related to map states",
 ]
 asyncio_mode = "auto"
 asyncio_default_fixture_loop_scope = "function"
