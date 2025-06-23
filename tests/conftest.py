@@ -39,7 +39,7 @@ def test_user() -> OIDCUser:
         email="test@example.com",
         given_name="Test",
         family_name="User",
-        roles=["user"],
+        roles=["user", "admin"],
         preferred_username="testuser"
     )
 

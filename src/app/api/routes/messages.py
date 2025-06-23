@@ -125,13 +125,13 @@ async def update_message(
     return MessageRead.model_validate(updated)
 
 
-@router.delete("/{message_id}", status_code=status.HTTP_200_OK)
+@router.delete("/{message_id}", response_model=MessageRead, status_code=status.HTTP_200_OK)
 async def delete_message(
     message_id: int,
     user: OIDCUser = Depends(map_oidc_user),
     service: MessageService = Depends(get_message_service),
-) -> None:
-    """Delete a message — only owner or admin."""
+) -> MessageRead:
+    """Delete a message and return it — only owner or admin."""
     msg: MessageDomain | None = await service.get(message_id)
     if msg is None:
         raise HTTPException(status_code=404, detail="Message not found")
@@ -139,5 +139,12 @@ async def delete_message(
     if msg.user_id != user.sub and "admin" not in (user.roles or []):
         raise HTTPException(status_code=403, detail="Not authorized to delete this message")
 
+    # Inject user object for response schema
+    msg.user = user
+
+    # Delete the message
     await service.delete(message_id)
     log.info("Deleted message", message_id=message_id, user_id=user.sub)
+
+    # Return the deleted object
+    return MessageRead.model_validate(msg)
