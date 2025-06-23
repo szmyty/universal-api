@@ -35,6 +35,7 @@ async def create_message(
 ) -> MessageRead:
     """Create a new message."""
     created: MessageDomain = await service.create(user_id=user.sub, payload=payload)
+    created.user = user
     log.info("Created message", message_id=created.id, user_id=user.sub)
     return MessageRead.model_validate(created)
 
@@ -50,6 +51,8 @@ async def list_all_messages(
 
     messages: Sequence[MessageDomain] = await service.list()
     log.info("Fetched all messages", count=len(messages), user_id=user.sub)
+    for m in messages:
+        m.user = user
     return [MessageRead.model_validate(m) for m in messages]
 
 
@@ -61,6 +64,8 @@ async def list_my_messages(
     """List messages created by the current user."""
     messages: Sequence[MessageDomain] = await service.list_by_user(user.sub)
     log.info("Fetched user's own messages", count=len(messages), user_id=user.sub)
+    for m in messages:
+        m.user = user
     return [MessageRead.model_validate(m) for m in messages]
 
 
@@ -76,6 +81,8 @@ async def list_messages_by_user_id(
 
     messages: Sequence[MessageDomain] = await service.list_by_user(user_id)
     log.info("Fetched messages for user", query_user_id=user_id, requester=user.sub)
+    for m in messages:
+        m.user = user
     return [MessageRead.model_validate(m) for m in messages]
 
 
@@ -93,6 +100,7 @@ async def get_message(
     if msg.user_id != user.sub and "admin" not in (user.roles or []):
         raise HTTPException(status_code=403, detail="Not authorized to access this message")
 
+    msg.user = user
     return MessageRead.model_validate(msg)
 
 
@@ -112,6 +120,8 @@ async def update_message(
         raise HTTPException(status_code=403, detail="Not authorized to update this message")
 
     updated: MessageDomain | None = await service.update(message_id, payload)
+    if updated is not None:
+        updated.user = user
     return MessageRead.model_validate(updated)
 
 
