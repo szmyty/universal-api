@@ -10,6 +10,7 @@ from structlog import BoundLogger
 from app.api.api import router as api_router
 from app.core.settings import get_settings
 from app.core.settings import Settings
+from app.db.migrations import run_migrations_async
 from app.extensions.logging_middleware import log_context_middleware
 from app.extensions.powered_by_middleware import powered_by_middleware
 from app.core.logging import get_logger
@@ -66,7 +67,7 @@ app.middleware("http")(powered_by_middleware)
 
 async def startup(app: FastAPI) -> None:
     log.info("🚀 Startup initiated")
-    # await run_migrations_async()
+    await run_migrations_async()
     log.info("✅ Application startup complete")
 
 async def shutdown(app: FastAPI) -> None:

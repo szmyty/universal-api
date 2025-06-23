@@ -35,3 +35,11 @@ tasks:
     cmds:
       - tree -L 3 -I "node_modules|.venv|reports|.cache|deprecated"
     silent: true
+
+  clean:
+    desc: Clean up Python cache files and directories
+    cmds:
+      - find . -type d -name "__pycache__" -exec rm -rf {} +
+      - find . -type f -name "*.pyc" -exec rm -f {} +
+      - rm -rf .cache
+    silent: true

@@ -34,3 +34,4 @@ keycloak = KeycloakConfiguration(
     enable_websocket_support=True,
     websocket_cookie_name="access_token"
 )
+
