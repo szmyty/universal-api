@@ -1,7 +1,10 @@
 from __future__ import annotations
 
 from datetime import datetime
+from typing import Optional
 from pydantic import BaseModel
+
+from app.auth.oidc_user import OIDCUser
 
 from app.db.entities.message import Message
 
@@ -10,6 +13,7 @@ class MessageDomain(BaseModel):
     id: int
     user_id: str
     content: str
+    user: Optional[OIDCUser] = None
     created_at: datetime
     updated_at: datetime
 
@@ -20,6 +24,7 @@ class MessageDomain(BaseModel):
             id=db_obj.id,
             user_id=db_obj.user_id,
             content=db_obj.content,
+            user=None,
             created_at=db_obj.created_at,
             updated_at=db_obj.updated_at,
         )
