@@ -5,6 +5,7 @@ from typing import AsyncGenerator
 from fastapi import FastAPI
 from fastapi.responses import JSONResponse
 from fastapi.utils import generate_unique_id
+from fastapi.middleware.gzip import GZipMiddleware
 from structlog import BoundLogger
 
 from app.api.api import router as api_router
@@ -64,6 +65,7 @@ app.include_router(api_router)
 
 app.middleware("http")(log_context_middleware)
 app.middleware("http")(powered_by_middleware)
+app.add_middleware(GZipMiddleware, minimum_size=1000, compresslevel=5)
 
 async def startup(app: FastAPI) -> None:
     log.info("🚀 Startup initiated")

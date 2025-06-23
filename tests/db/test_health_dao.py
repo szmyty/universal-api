@@ -1,5 +1,8 @@
+from __future__ import annotations
+
 import pytest
 from sqlalchemy.ext.asyncio import AsyncSession
+
 from app.infrastructure.health.dao import HealthDAO
 
 @pytest.mark.anyio
@@ -8,7 +11,7 @@ from app.infrastructure.health.dao import HealthDAO
 class TestHealthDAO:
     """Unit tests for HealthDAO."""
 
-    async def test_health_dao_ping_success(self, db_session: AsyncSession) -> None:
+    async def test_health_dao_ping_success(self: TestHealthDAO, db_session: AsyncSession) -> None:
         """Should return True when database is healthy (ping works)."""
         # Arrange
         dao = HealthDAO(db_session)

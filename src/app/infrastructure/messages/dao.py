@@ -1,27 +1,65 @@
 from __future__ import annotations
+from typing import Sequence, Tuple, Union, overload
 
-import uuid
-from typing import Sequence
-
-from app.infrastructure.messages.repository import MessageRepository
-from app.schemas.message import MessageCreate, MessageUpdate
-from app.db.entities import Message
+from sqlalchemy import Result
+from sqlalchemy.ext.asyncio import AsyncSession
+from sqlalchemy.future import select
+from app.db.entities.message import Message
+from app.schemas.messages.messages import MessageCreate
 
 class MessageDAO:
-    def __init__(self: MessageDAO, repository: MessageRepository) -> None:
-        self.repository: MessageRepository = repository
+    """Data Access Object for Message entity."""
+    def __init__(self: MessageDAO, session: AsyncSession) -> None:
+        """Initialize with an async database session."""
+        self.session: AsyncSession = session
 
-    async def create_message(self: MessageDAO, data: MessageCreate) -> Message:
-        return await self.repository.create(content=data.content, author=data.author)
+    @overload
+    async def create(self: MessageDAO, user_id: str, content: str) -> Message: ...
 
-    async def get_message(self: MessageDAO, message_id: uuid.UUID) -> Message | None:
-        return await self.repository.get(message_id)
+    @overload
+    async def create(self: MessageDAO, user_id: str, content: MessageCreate) -> Message: ...
 
-    async def get_all_messages(self: MessageDAO) -> Sequence[Message]:
-        return await self.repository.get_all()
+    async def create(
+        self,
+        user_id: str,
+        content: Union[str, MessageCreate],
+    ) -> Message:
+        """Create a message using a content string or a MessageCreate object."""
+        if isinstance(content, MessageCreate):
+            content_value: str = content.content
+        else:
+            content_value = content
 
-    async def update_message(self: MessageDAO, message_id: uuid.UUID, data: MessageUpdate) -> Message | None:
-        return await self.repository.update(message_id, content=data.content, author=data.author)
+        msg = Message(user_id=user_id, content=content_value)
+        self.session.add(msg)
+        await self.session.commit()
+        await self.session.refresh(msg)
+        return msg
 
-    async def delete_message(self: MessageDAO, message_id: uuid.UUID) -> bool:
-        return await self.repository.delete(message_id)
+    async def get(self: MessageDAO, id: int) -> Message | None:
+        """Retrieve a message by its ID."""
+        result: Message | None = await self.session.get(Message, id)
+        return result
+
+    async def list(self: MessageDAO) -> Sequence[Message]:
+        """List all messages."""
+        result: Result[Tuple[Message]] = await self.session.execute(select(Message))
+        return result.scalars().all()
+
+    async def update(self: MessageDAO, id: int, content: str) -> Message | None:
+        """Update a message's content by its ID."""
+        msg: Message | None = await self.get(id)
+        if msg is None:
+            return None
+        msg.content = content
+        await self.session.commit()
+        return msg
+
+    async def delete(self: MessageDAO, id: int) -> bool:
+        """Delete a message by its ID."""
+        msg: Message | None = await self.get(id)
+        if msg is None:
+            return False
+        await self.session.delete(msg)
+        await self.session.commit()
+        return True

@@ -1,27 +1,30 @@
-from __future__ import annotations
-
-import uuid
 from typing import Sequence
-
-from app.infrastructure.messages.dao import MessageDAO
-from app.schemas.message import MessageCreate, MessageUpdate
-from app.db.entities import Message
+from app.domain.messages.interfaces import MessageRepository
+from app.schemas.messages import MessageCreate, MessageUpdate
+from app.domain.messages.models import MessageDomain
 
 class MessageService:
-    def __init__(self: MessageService, dao: MessageDAO) -> None:
-        self.dao: MessageDAO = dao
+    """Service layer for message operations."""
+    def __init__(self, repo: MessageRepository) -> None:
+        """Initialize with a message repository."""
+        self.repo: MessageRepository = repo
 
-    async def create_message(self: MessageService, data: MessageCreate) -> Message:
-        return await self.dao.create_message(data)
+    async def create(self, user_id: str, payload: MessageCreate) -> MessageDomain:
+        """Create a new message."""
+        return await self.repo.create(user_id, payload.content)
 
-    async def get_message(self: MessageService, message_id: uuid.UUID) -> Message | None:
-        return await self.dao.get_message(message_id)
+    async def get(self, id: int) -> MessageDomain | None:
+        """Get a message by ID."""
+        return await self.repo.get(id)
 
-    async def get_all_messages(self: MessageService) -> Sequence[Message]:
-        return await self.dao.get_all_messages()
+    async def list(self) -> Sequence[MessageDomain]:
+        """List all messages."""
+        return await self.repo.list()
 
-    async def update_message(self: MessageService, message_id: uuid.UUID, data: MessageUpdate) -> Message | None:
-        return await self.dao.update_message(message_id, data)
+    async def update(self, id: int, payload: MessageUpdate) -> MessageDomain | None:
+        """Update a message by ID."""
+        return await self.repo.update(id, payload.content)
 
-    async def delete_message(self: MessageService, message_id: uuid.UUID) -> bool:
-        return await self.dao.delete_message(message_id)
+    async def delete(self, id: int) -> bool:
+        """Delete a message by ID."""
+        return await self.repo.delete(id)
