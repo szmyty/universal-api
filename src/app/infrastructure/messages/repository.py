@@ -14,21 +14,21 @@ class SqlAlchemyMessageRepository(MessageRepository):
     async def create(self: SqlAlchemyMessageRepository, user_id: str, content: str) -> MessageDomain:
         """Create a new message."""
         db_obj: Message = await self.dao.create(user_id, content)
-        return MessageDomain.model_validate(db_obj)
+        return MessageDomain.from_entity(db_obj)
 
     async def get(self: SqlAlchemyMessageRepository, id: int) -> MessageDomain | None:
         """Retrieve a message by ID."""
         db_obj: Message | None = await self.dao.get(id)
-        return MessageDomain.model_validate(db_obj) if db_obj else None
+        return MessageDomain.from_entity(db_obj) if db_obj else None
 
     async def list(self: SqlAlchemyMessageRepository) -> list[MessageDomain]:
         """List all messages."""
-        return [MessageDomain.model_validate(m) for m in await self.dao.list()]
+        return [MessageDomain.from_entity(m) for m in await self.dao.list()]
 
     async def update(self: SqlAlchemyMessageRepository, id: int, content: str) -> MessageDomain | None:
         """Update a message's content by ID."""
         db_obj: Message | None = await self.dao.update(id, content)
-        return MessageDomain.model_validate(db_obj) if db_obj else None
+        return MessageDomain.from_entity(db_obj) if db_obj else None
 
     async def delete(self: SqlAlchemyMessageRepository, id: int) -> bool:
         """Delete a message by ID."""

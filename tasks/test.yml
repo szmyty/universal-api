@@ -74,6 +74,12 @@ tasks:
       - poetry run pytest {{.ROOT_DIR}}/tests/db/test_messages_dao.py --tb=short
     silent: true
 
+  messages:repository:
+    desc: Run messages repository tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/db/test_messages_repository.py --tb=short
+    silent: true
+
   utils:license:
     desc: Run license utility tests
     cmds:

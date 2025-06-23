@@ -53,6 +53,7 @@ class MessageDAO:
             return None
         msg.content = content
         await self.session.commit()
+        await self.session.refresh(msg)  # ✅ fixes the greenlet issue
         return msg
 
     async def delete(self: MessageDAO, id: int) -> bool:
