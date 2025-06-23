@@ -33,7 +33,7 @@ tasks:
   tree:
     desc: Generate directory tree structure
     cmds:
-      - tree -L 3 -I "node_modules|.venv|reports|.cache|deprecated"
+      - tree -L 5 -I "node_modules|.venv|reports|.cache|deprecated"
     silent: true
 
   clean:
