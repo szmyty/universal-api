@@ -7,8 +7,8 @@ class Message(Base):
     """SQLAlchemy model for the messages table."""
     __tablename__: str = "messages"
 
-    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True)
-    user_id: Mapped[str] = mapped_column(nullable=False)
+    id: Mapped[int] = mapped_column(primary_key=True, autoincrement=True, index=True)
+    user_id: Mapped[str] = mapped_column(nullable=False, index=True)
     content: Mapped[str] = mapped_column(Text, nullable=False)
 
     created_at: Mapped[datetime] = mapped_column(

@@ -1,10 +1,13 @@
 from typing import Sequence
+
 from app.domain.messages.interfaces import MessageRepository
 from app.schemas.messages import MessageCreate, MessageUpdate
 from app.domain.messages.models import MessageDomain
 
+
 class MessageService:
     """Service layer for message operations."""
+
     def __init__(self, repo: MessageRepository) -> None:
         """Initialize with a message repository."""
         self.repo: MessageRepository = repo
@@ -20,6 +23,10 @@ class MessageService:
     async def list(self) -> Sequence[MessageDomain]:
         """List all messages."""
         return await self.repo.list()
+
+    async def list_by_user(self, user_id: str) -> Sequence[MessageDomain]:
+        """List all messages created by a specific user."""
+        return await self.repo.list_by_user(user_id)
 
     async def update(self, id: int, payload: MessageUpdate) -> MessageDomain | None:
         """Update a message by ID."""

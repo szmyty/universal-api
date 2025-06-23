@@ -1,7 +1,7 @@
 from __future__ import annotations
 from typing import Sequence, Tuple, Union, overload
 
-from sqlalchemy import Result
+from sqlalchemy import Result, Select
 from sqlalchemy.ext.asyncio import AsyncSession
 from sqlalchemy.future import select
 from app.db.entities.message import Message
@@ -64,3 +64,9 @@ class MessageDAO:
         await self.session.delete(msg)
         await self.session.commit()
         return True
+
+    async def list_by_user(self: MessageDAO, user_id: str) -> Sequence[Message]:
+        """List all messages for a given user ID."""
+        stmt: Select[Tuple[Message]] = select(Message).where(Message.user_id == user_id)
+        result: Result[Tuple[Message]] = await self.session.execute(stmt)
+        return result.scalars().all()

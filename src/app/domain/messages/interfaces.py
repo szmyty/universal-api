@@ -21,3 +21,6 @@ class MessageRepository(ABC):
 
     @abstractmethod
     async def delete(self: MessageRepository, id: int) -> bool: ...
+
+    @abstractmethod
+    async def list_by_user(self: MessageRepository, user_id: str) -> Sequence[MessageDomain]: ...

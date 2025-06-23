@@ -1,4 +1,5 @@
 from __future__ import annotations
+from typing import Sequence
 
 from app.db.entities.message import Message
 from app.domain.messages.models import MessageDomain
@@ -33,3 +34,8 @@ class SqlAlchemyMessageRepository(MessageRepository):
     async def delete(self: SqlAlchemyMessageRepository, id: int) -> bool:
         """Delete a message by ID."""
         return await self.dao.delete(id)
+
+    async def list_by_user(self: SqlAlchemyMessageRepository, user_id: str) -> list[MessageDomain]:
+        """List all messages created by a specific user."""
+        db_objs: Sequence[Message] = await self.dao.list_by_user(user_id)
+        return [MessageDomain.from_entity(message) for message in db_objs]
