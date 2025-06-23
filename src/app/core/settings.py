@@ -19,6 +19,8 @@ from pydantic_settings import (
 )
 from spdx_license_list import LICENSES
 
+from app.utils.project import get_version_from_pyproject
+
 class KeycloakSettings(BaseModel):
     """Configuration for connecting to Keycloak OIDC server."""
     model_config = SettingsConfigDict(
@@ -130,7 +132,7 @@ class SystemSettings(BaseModel):
 
 class Settings(BaseSettings):
     project_name: str = Field(..., alias="name", description="Project name, e.g., 'Universal API'")
-    version: str = Field(..., alias="version", description="Project version, e.g., '1.0.0'")
+    version: str = Field(default_factory=get_version_from_pyproject, description="Locked to pyproject.toml")
     description: str = Field(..., alias="description", description="Project description")
     license: str = Field(default="MIT", alias="license", description="License type, e.g., 'MIT'")
     fqdn: str = Field(default="localhost", alias="FQDN", description="Fully qualified domain name for the service")
