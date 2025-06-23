@@ -86,6 +86,12 @@ tasks:
       - poetry run pytest {{.ROOT_DIR}}/tests/db/test_messages_repository.py --tb=short
     silent: true
 
+  messages:api:
+    desc: Run messages API tests
+    cmds:
+      - poetry run pytest {{.ROOT_DIR}}/tests/api/test_messages_api.py --tb=short
+    silent: true
+
   profile:api:
     desc: Run profile API tests
     cmds:

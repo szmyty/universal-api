@@ -115,7 +115,7 @@ async def update_message(
     return MessageRead.model_validate(updated)
 
 
-@router.delete("/{message_id}", status_code=status.HTTP_204_NO_CONTENT)
+@router.delete("/{message_id}", status_code=status.HTTP_200_OK)
 async def delete_message(
     message_id: int,
     user: OIDCUser = Depends(map_oidc_user),

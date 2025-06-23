@@ -10,7 +10,7 @@ keycloak = KeycloakConfiguration(
     url=settings.keycloak.https_url,
     client_id=settings.keycloak.client_id,
     swagger_client_id=settings.keycloak.swagger_client_id,
-    client_secret=settings.keycloak.client_secret,
+    client_secret=settings.keycloak.client_secret.get_secret_value(),
     claims=[
         "openid",
         "sub",
